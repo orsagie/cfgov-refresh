@@ -10,6 +10,7 @@ from v1.blocks import ReusableTextChooserBlock
 from v1.models.snippets import Contact, ReusableText
 
 
+
 class TestUnicodeCompatibility(TestCase):
     @skipIf(six.PY3, "all strings are unicode")
     def test_unicode_contact_heading_str(self):
@@ -37,3 +38,27 @@ class TestReusableTextRendering(TestCase):
         html = '<a linktype="page" id="12345">Link</a>'
         block = ReusableTextChooserBlock(ReusableText)
         self.assertIn('<a>', block.render({'text': html}))
+
+    def test_presence_of_heading(self):
+        sidefoot_heading = 'Reusable text snippet heading'
+        html = '<p>This is the text of the reusable snippet.</p>'
+        block = ReusableTextChooserBlock(ReusableText)
+        self.assertIn(
+            '<h2 class="a-heading">',
+            block.render({
+                'sidefoot_heading': sidefoot_heading,
+                'text': html
+            })
+        )
+
+    def test_lack_of_heading(self):
+        sidefoot_heading = None
+        html = '<p>This is the text of the reusable snippet.</p>'
+        block = ReusableTextChooserBlock(ReusableText)
+        self.assertNotIn(
+            '<h2 class="a-heading">',
+            block.render({
+                'sidefoot_heading': sidefoot_heading,
+                'text': html
+            })
+        )
