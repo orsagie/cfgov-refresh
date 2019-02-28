@@ -1,0 +1,8 @@
+{% set tag = 'h2'%}
+{% if value.level == 'heading2' %}
+	{% set tag = 'h3'%}
+{% elif value.level == 'heading3' %}
+	{% set tag = 'h4'%}
+{% endif %}
+
+<{{ tag }}>{{ value.text }}</{{ tag }}>
