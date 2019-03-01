@@ -566,9 +566,7 @@ class AnswerPage(CFGOVPage):
         ('table_block', organisms.AtomicTableBlock(
             table_options={'renderer': 'html'})),
         ('tip', v1_blocks.Tip()),
-        ('warning', v1_blocks.Warning()),
-        ('heading', v1_blocks.AskHeadingBlock())
-        
+        ('warning', v1_blocks.Warning()),        
     ], blank=True, verbose_name='Answer')
     snippet = RichTextField(blank=True, help_text='Optional answer intro')
     search_tags = models.CharField(

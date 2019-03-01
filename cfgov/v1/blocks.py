@@ -323,24 +323,3 @@ class Warning(blocks.StructBlock):
     class Meta:
         icon = 'title'
         template = '_includes/ask/warning.html'
-
-
-class AskHeadingLevelBlock(blocks.ChoiceBlock):
-    choices = [
-        ('heading1', 'Section heading'),
-        ('heading2', 'Sub section heading'),
-    ]
-    classname = 'heading-level-block'
-
-
-class AskHeadingBlock(blocks.StructBlock):
-    text = HeadingTextBlock(required=False, label="Heading text")
-    level = AskHeadingLevelBlock(default='heading1')
-    
-    class Meta:
-        icon = 'title'
-        template = '_includes/ask/ask-heading.html'
-        form_template = (
-            'admin/form_templates/struct-with-block-wrapper-classes.html'
-        )
-

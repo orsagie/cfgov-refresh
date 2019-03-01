@@ -45,21 +45,18 @@
         {% endif %}
 
     {% if flag_enabled('ASK_CFPB_H1', page=page) %}
-        <h1 class="h2">{{ page.question | striptags }}</h1>
+        <h1>{{ page.question | striptags }}</h1>
     {% else %}
-        <h2>{{ page.question | striptags }}</h2>
+        <h1>{{ page.question | striptags }}</h1>
     {% endif %}
     </div>
 
     <div class="block
                 block__flush-top">
         {% if page.snippet %}
-            <h3 class="answer-snippet">
-                <strong>
-                    Answer:
-                </strong>
+            <div class="lead-paragraph">
                 {{ page.snippet | safe }}
-            </h3>
+            </div>
         {% endif %}
         <div data-qa-hook="expandable"
              data-read-more="true"
@@ -70,6 +67,12 @@
                     {% for block in page.answer_content %}
                         {% if block.block_type == 'text' %}
                             {{ block.value.content | richtext | safe }}
+                        {% elif block.block_type == 'text_section' %}
+                            {% if block.value.heading %}
+                            <h2>{{ block.value.heading }}</h2>
+                            {% endif %}
+                            {{ block.value.content | richtext | safe }}
+                            
                         {% else %}
                         {% include_block block %}
                         {% endif %}
