@@ -18,7 +18,7 @@ services:
     python:
         build: .
         ports:
-            - "8000:8000"
+            - "8000:80"
         environment:
             ES_HOST: elasticsearch
         volumes:

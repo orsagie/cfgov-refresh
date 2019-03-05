@@ -124,3 +124,8 @@ protractorFailuresReport/
 # Auto-generated service workers #
 ##################################
 cfgov/regulations3k/jinja2/regulations3k/regulations3k-service-worker.js
+
+# Apache #
+##########
+apache/logs/*
+apache/modules
