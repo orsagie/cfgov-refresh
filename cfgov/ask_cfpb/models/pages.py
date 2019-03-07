@@ -569,6 +569,9 @@ class AnswerPage(CFGOVPage):
         ('warning', v1_blocks.Warning()),        
     ], blank=True, verbose_name='Answer')
     snippet = RichTextField(blank=True, help_text='Optional answer intro')
+    short_answer = models.TextField(
+        blank=True,
+        help_text="Optional answer intro.")
     search_tags = models.CharField(
         max_length=1000,
         blank=True,
@@ -598,7 +601,7 @@ class AnswerPage(CFGOVPage):
             heading="Visible time stamp"),
         FieldPanel('question'),
         FieldPanel('statement'),
-        FieldPanel('snippet'),
+        FieldPanel('short_answer'),
         StreamFieldPanel('answer_content'),
         FieldPanel('search_tags'),
         FieldPanel('redirect_to'),

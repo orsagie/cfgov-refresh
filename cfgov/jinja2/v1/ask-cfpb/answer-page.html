@@ -64,6 +64,7 @@
                     o-expandable__read-more">
             <div class="o-expandable_content" id="answer-content">
                 <div class="answer-text">
+                    <div class="u-clearfix">
                     {% for block in page.answer_content %}
                         {% if block.block_type == 'text' %}
                             {{ block.value.content | richtext | safe }}
@@ -77,6 +78,7 @@
                         {% include_block block %}
                         {% endif %}
                     {% endfor %}
+                    </div>
                 </div>
                 {% if audiences %}
                 <div class="u-mt15">
