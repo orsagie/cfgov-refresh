@@ -54,9 +54,9 @@
     <div class="block
                 block__flush-top">
         {% if page.snippet %}
-            <div class="lead-paragraph">
-                {{ page.snippet | safe }}
-            </div>
+            <p class="lead-paragraph">
+                {{ page.short_answer | safe }}
+            </p>
         {% endif %}
         <div data-qa-hook="expandable"
              data-read-more="true"
