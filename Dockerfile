@@ -1,8 +1,8 @@
 FROM centos:7
 ENV CFGOV_PATH=/src/cfgov-refresh\
     STATIC_PATH=/src/cfgov-refresh/cfgov/static_built\
-    APACHE_SERVER_ROOT=/src/cfgov-refresh/apache\
-    APACHE_WWW_PATH=/src/cfgov-refresh/apache/www\
+    APACHE_SERVER_ROOT=/src/cfgov-refresh/cfgov/apache\
+    APACHE_WWW_PATH=/src/cfgov-refresh/cfgov/apache/www\
     CFGOV_SANDBOX=/src/cfgov-refresh/sandbox\
     APACHE_PROCESS_COUNT=4\
     ERROR_LOG=/proc/self/fd/1
