@@ -1,0 +1,42 @@
+{# ==========================================================================
+
+   See all
+
+   ==========================================================================
+
+   Description:
+
+   ========================================================================== #}
+
+
+<div>
+    <h2>
+      {{ value.portal_topic }}
+      {% if value.portal_category %}
+        {{ value.portal_category | lower }}
+      {% endif %}
+    </h2>
+
+   <form method="get" action="." class="content-l">
+        <div class="o-search-bar_input o-search-bar_col">
+          Narrow your results
+            <div class="input-with-btn input-with-btn__bar">
+              <input class="a-text-input" type="text" name="search_term" value="{{ search_term }}">
+              <button class="a-btn" name="btnSearch" id="btnSearch" type="submit">
+                  Search
+              </button>
+            </div>
+        </div>
+    </form>
+
+    <br>
+
+    <h3>{{ num_results }} results</h3>
+
+    {% for page in pages %}
+      <br>
+      <a href={{page.url}}>{{ page.title }}</a>
+      <br>
+    {% endfor %}
+</div>
+

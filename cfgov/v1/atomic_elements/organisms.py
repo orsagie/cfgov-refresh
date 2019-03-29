@@ -387,6 +387,40 @@ class RelatedPosts(blocks.StructBlock):
         template = '_includes/molecules/related-posts.html'
 
 
+class SeeAll(blocks.StructBlock):
+    portal_topic = SnippetChooserBlock('v1.PortalTopic')
+    portal_category = SnippetChooserBlock('v1.PortalCategory', required=False)
+
+    def get_context(self, value, parent_context=None):
+        context = super(SeeAll, self).get_context(
+            value,
+            parent_context=parent_context
+        )
+
+        request = context['request']
+        search_term = request.GET.get('search_term', '')
+
+        pages = value['portal_topic'].answerpage_set.filter(language='en').all()
+        if value['portal_category']:
+            pages = pages.filter(portal_category__in=[value['portal_category'].pk])
+        if search_term:
+            pages = pages.filter(title__icontains=search_term)
+
+        context.update({
+            'value': value,
+            'pages': pages,
+            'search_term': search_term,
+            'num_results': len(pages)
+        })
+
+        return context
+
+    class Meta:
+        label = 'See All'
+        icon = 'form'
+        template = '_includes/organisms/see-all.html'
+
+
 class MainContactInfo(blocks.StructBlock):
     contact = SnippetChooserBlock('v1.Contact')
     has_top_rule_line = blocks.BooleanBlock(
