@@ -5,6 +5,40 @@
 
 /* Answer page */
 
+.see-all-page {
+    .m-notification {
+        box-sizing: border-box;
+        max-width: unit( @well-max / @base-font-size-px, em );
+    }
+
+    .m-form-field {
+        display: flex;
+
+        .a-btn {
+            margin-left: 10px;
+        }
+    }
+
+    .results {
+        max-width: 41.8em;
+
+        article {
+            padding-bottom: unit( @grid_gutter-width / @base-font-size-px, em );
+            padding-top: unit( @grid_gutter-width / @base-font-size-px, em );
+            border-bottom: 1px solid @block__border-bottom;
+
+            &:first-child {
+                padding-top: 0;
+            }
+
+            &:last-child {
+                border-bottom-width: 0;
+            }
+        }
+    }
+
+}
+
 .ask-cfpb-page__answer {
     .answer-edited-date {
         .h5();
