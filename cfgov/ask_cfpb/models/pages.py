@@ -241,6 +241,103 @@ class SecondaryNavigationJSMixin(object):
         return js
 
 
+class SeeAllPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
+    """
+    A routable page type for Ask CFPB see all pages.
+    """
+
+    objects = CFGOVPageManager()
+    portal_topic = models.ForeignKey(
+        PortalTopic,
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL)
+    content_panels = CFGOVPage.content_panels + [
+        FieldPanel('portal_topic'),
+    ]
+
+    edit_handler = TabbedInterface([
+        ObjectList(content_panels, heading='Content'),
+        ObjectList(CFGOVPage.settings_panels, heading='Configuration'),
+    ])
+
+    def get_template(self, request):
+        return 'ask-cfpb/see-all.html'
+
+    def get_context(self, request, *args, **kwargs):
+        context = super(
+            SeeAllPage, self).get_context(request, *args, **kwargs)
+        context.update({
+            'about_us': get_reusable_text_snippet(ABOUT_US_SNIPPET_TITLE),
+            'disclaimer': get_reusable_text_snippet(ENGLISH_DISCLAIMER_SNIPPET_TITLE)
+        })
+
+        return context
+
+    def get_nav_items(self, request, page):
+        return [{
+            'title': page.portal_topic.heading,
+            'url': page.url,
+            'active': False if page.portal_category else True,
+            'expanded': True,
+            'children': [
+                {
+                    'title': category.heading,
+                    'url': page.url + slugify(category.heading) + '/',
+                    'active': False if not page.portal_category else category.heading == page.portal_category.heading,
+                }
+                for category in PortalCategory.objects.all()
+            ],
+        }], True
+
+    def get_results(self, request):
+        context = self.get_context(request)
+        answer_pages = self.portal_topic.answerpage_set.filter(
+            language='en',
+            live=True,
+            redirect_to_page=None
+        )
+        if self.portal_category:
+            answer_pages = answer_pages.filter(portal_category__in=[self.portal_category.pk])
+
+        search_term = request.GET.get('search_term', '')
+        if search_term:
+            answer_pages = answer_pages.filter(title__icontains=search_term)
+            results_message = 'Showing {} matches for "{}"'.format(answer_pages.count(), search_term)
+        else:
+            results_message = 'Showing {} answers'.format(answer_pages.count())
+
+        paginator = Paginator(answer_pages, 20)
+        page_number = validate_page_number(request, paginator)
+        pages = paginator.page(page_number)
+        context.update({
+            'paginator': paginator,
+            'current_page': page_number,
+            'results_message': results_message,
+            'pages': pages,
+            'search_term': search_term,
+            'get_secondary_nav_items': self.get_nav_items,
+        })
+
+        return TemplateResponse(
+            request,
+            self.get_template(request),
+            context)
+
+    @route(r'^$')
+    def portal_topic_page(self, request):
+        self.portal_category = None
+        return self.get_results(request)
+
+    @route(r'^(?P<category>[^/]+)/$')
+    def portal_category_page(self, request, **kwargs):
+        category = kwargs.get('category')
+        for portal_category in PortalCategory.objects.all():
+            if category == slugify(portal_category):
+                self.portal_category = portal_category
+                return self.get_results(request)
+
+
 class AnswerCategoryPage(RoutablePageMixin, SecondaryNavigationJSMixin,
                          CFGOVPage):
     """

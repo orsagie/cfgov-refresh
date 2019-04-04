@@ -1,0 +1,101 @@
+{% extends 'layout-side-nav.html' %}
+
+{% import 'macros/category-icon.html' as category_icon %}
+{% import 'atoms/partially-styled-link.html' as partially_styled_link with context %}
+{% import 'molecules/pagination.html' as pagination with context %}
+{% import 'ask/ask-search-bar.html' as ask_search_bar with context %}
+
+
+{% block content_modifiers -%}
+    {{ super() }} content__hide-horizontal-overflow ask-cfpb-page ask-cfpb-page__category
+{%- endblock %}
+
+{% block banner_top %}
+    {% if about_us %}
+        {% set value = {
+            'border_bottom': True,
+            'additional_classes': ' ask-cfpb-banner',
+            'content': about_us.text
+        } %}
+        {% include 'templates/content-banner.html' with context %}
+    {% endif %}
+{% endblock %}
+
+{% block content_main_modifiers -%}
+    {{ super() }} content__flush-bottom
+{%- endblock %}
+
+{% block content_main %}
+
+    <h2>
+      {{ page.portal_topic }}
+      {% if category %}
+        {{ category | lower }}
+      {% endif %}
+    </h2>
+
+    <aside class="o-search-bar
+                  block
+                  block__bg
+                  block__border
+                  o-search-bar__full">
+        <form method="get" action="." class="content-l">
+        <label for="o-search-bar_query" class="o-search-bar_label o-search-bar_col">
+            <h4 class="u-mb0">
+                Narrow your search
+            </h4>
+        </label>
+        <br>
+        <br>
+        <div class="o-search-bar_input o-search-bar_col" style="width: 100%">
+            <div class="input-with-btn input-with-btn__bar">
+                <div class="input-with-btn_input">
+                    <input
+                        class="a-text-input"
+                        type="text"
+                        name="search_term"
+                        value="{{ search_term }}"
+                        style="width: 95%">
+                </div>
+                <div class="input-with-btn_btn">
+                    <button class="a-btn" name="btnSearch" id="btnSearch" type="submit">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </div>
+        </form>
+    </aside>
+
+
+    <section class="search-results block block__flush-top">
+        <div class="search-results_notification u-mt30">
+            {% from 'molecules/notification.html' import render as notification with context %}
+            {{ notification('success', false, results_message) }}
+        </div>
+
+        <div class="question_list">
+            {% for page in pages %}
+            <article class="question_summary question_summary__basic">
+                <h3> {{ page.question }} </h3>
+                <p> {{ page.short_answer | safe }} </p>
+                <p>
+                    <a href={{page.url}}>Read full answer</a>
+                </p>
+            </article>
+            {% endfor %}
+        </div>
+
+        <div class="block block__sub">
+            {{ pagination.render( paginator.num_pages, current_page, '', 0, 'Previous', 'Next' ) }}
+        </div>
+
+        {% if disclaimer %}
+        <div class="block block__flush-bottom ask-disclaimer">
+            {{ disclaimer.text | safe }}
+        </div>
+        {% endif %}
+    </section>
+    {{ ask_search_bar.render( 'right' ) }}
+
+{% endblock %}
