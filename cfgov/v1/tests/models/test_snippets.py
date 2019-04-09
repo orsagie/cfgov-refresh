@@ -10,8 +10,6 @@ from v1.blocks import ReusableTextChooserBlock
 from v1.models.snippets import Contact, ReusableText
 
 
-
-
 class TestUnicodeCompatibility(TestCase):
     @skipIf(six.PY3, "all strings are unicode")
     def test_unicode_contact_heading_str(self):
