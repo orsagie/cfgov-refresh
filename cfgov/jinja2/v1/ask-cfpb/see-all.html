@@ -1,6 +1,7 @@
 {% extends 'layout-side-nav.html' %}
 
 {% import 'molecules/pagination.html' as pagination with context %}
+{% import 'atoms/partially-styled-link.html' as partially_styled_link with context %}
 
 {% block content_modifiers -%}
     {{ super() }} see-all-page
@@ -9,13 +10,15 @@
 {% block content_main %}
     <h1>
       {{ page.portal_topic }}
-      {% if category %}
-        {{ category | lower }}
+      {% if page.portal_category %}
+        {{ page.portal_category | lower }}
       {% endif %}
     </h1>
+    {% if not page.portal_category %}
     <p class="lead-paragraph">
         {{ page.overview }}
     </p>
+    {% endif %}
     <aside class="o-well u-mt30">
         <form method="get" action="." class="content-l">
             <label for="ask-search" class="a-label a-label__heading">
@@ -42,11 +45,9 @@
     <section class="results">
         {% for page in pages %}
         <article>
-            <h3> {{ page.question }} </h3>
-            <p> {{ page.short_answer | safe }} </p>
-            <p>
-                <a href="{{ page.url }}">Read full answer</a>
-            </p>
+            {{ partially_styled_link.render(
+                {'plain_text': page.question, 'underlined_text': 'Read answer', 'url': page.url})
+            }}
         </article>
         {% endfor %}
 
@@ -54,5 +55,6 @@
             {{ pagination.render( paginator.num_pages, current_page, '', 0, 'Previous', 'Next' ) }}
         </div>
     </section>
+    <b>Don't see what you're looking for? </b><a href=/ask-cfpb/search/>Search our full library of answers</a>
 
 {% endblock %}

@@ -298,14 +298,17 @@ class SeeAllPage(RoutablePageMixin, SecondaryNavigationJSMixin, CFGOVPage):
                 portal_category__in=[self.portal_category.pk])
 
         search_term = request.GET.get('search_term', '')
+        search_str = None
         if search_term:
             answer_pages = answer_pages.filter(title__icontains=search_term)
-            results_message = 'Showing {} matches for "{}"'.format(
-                answer_pages.count(), search_term)
-        else:
-            results_message = 'Showing {} answers'.format(answer_pages.count())
+            search_str = 'results for "{}"'.format(search_term)
 
-        paginator = Paginator(answer_pages, 20)
+        results_message = 'Showing {} {} within {}'.format(
+            answer_pages.count(), search_str or 'answers',
+            (self.portal_category or self.portal_topic).heading.lower()
+        )
+
+        paginator = Paginator(answer_pages, 10)
         page_number = validate_page_number(request, paginator)
         pages = paginator.page(page_number)
         context.update({
